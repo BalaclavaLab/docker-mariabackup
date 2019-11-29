@@ -1,0 +1,19 @@
+name: Docker Image CI
+
+on: [push]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build the Docker image
+      run: |
+        docker login docker.pkg.github.com --username juris --password "${GITHUB_PACKAGE_REGISTRY_TOKEN}"
+        docker build . --file Dockerfile --tag docker.pkg.github.com/balaclavalab/docker-mariabackup/mariadb
+        docker push docker.pkg.github.com/balaclavalab/docker-mariabackup/mariadb
+      env:
+        GITHUB_PACKAGE_REGISTRY_TOKEN: ${{ secrets.GITHUB_PACKAGE_REGISTRY_TOKEN }}
